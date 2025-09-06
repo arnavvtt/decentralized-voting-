@@ -1,1 +1,1 @@
-# decentralized-voting-
+# Decentralized - Voting Web Platform
