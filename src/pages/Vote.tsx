@@ -1,63 +1,56 @@
-import React, { useState } from "react";
-import { useAppContext } from "../contexts/AppContext";
-import CandidateCard from "../components/CandidateCard";
+// src/pages/Vote.tsx - Overwrite
 
-const Vote: React.FC = () => {
-  const { candidates, addCandidate, isAdmin, setIsAdmin } = useAppContext();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+import React, { useState } from 'react';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import { useAppContext } from '../contexts/AppContext';
 
-  const handleAdd = () => {
-    if (name.trim() === "") return;
-    addCandidate({ name, description });
-    setName("");
-    setDescription("");
+export default function Vote() {
+  const { candidates, voteFor, wallet } = useAppContext();
+  const [votedId, setVotedId] = useState<string | null>(null);
+
+  const handleVote = (id: string) => {
+    if (!wallet.address) {
+      alert('Please connect your wallet first.');
+      return;
+    }
+    voteFor(id);
+    setVotedId(id);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Vote for your favorite candidate</h1>
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-          onClick={() => setIsAdmin(!isAdmin)}
+    <Card style={{ maxWidth: 640, margin: '5vw auto' }}>
+      <h2>Vote for Your Candidate</h2>
+      {candidates.map(c => (
+        <div
+          className={`card-item${votedId === c.id ? ' selected animate-bounce' : ''}`}
+          key={c.id}
         >
-          Toggle Admin
-        </button>
-      </div>
-
-      {isAdmin && (
-        <div className="mb-6 p-4 bg-white rounded shadow">
-          <input
-            type="text"
-            placeholder="Candidate Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="border p-2 rounded w-full mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="border p-2 rounded w-full mb-2"
-          />
-          <button
-            className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition"
-            onClick={handleAdd}
+          <span style={{ fontWeight: 600 }}>{c.name}</span>
+          <Button
+            onClick={() => handleVote(c.id)}
+            disabled={votedId !== null}
+            style={{ marginLeft: 10 }}
           >
-            Add Candidate
-          </button>
+            {votedId === c.id ? 'Voted!' : 'Vote'}
+          </Button>
+        </div>
+      ))}
+      {!wallet.address && (
+        <div style={{ color: '#bb5e06', marginTop: '1em', fontWeight: 500 }}>
+          Connect your MetaMask wallet to vote.
         </div>
       )}
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {candidates.map((c) => (
-          <CandidateCard key={c.id} candidate={c} />
-        ))}
-      </div>
-    </div>
+      {votedId && (
+        <div style={{
+          color: '#208683', marginTop: 19,
+          fontWeight: 700, fontSize: '1.1em'
+        }}>
+          Thanks! Your vote was submitted.
+        </div>
+      )}
+    </Card>
   );
-};
+}
 
-export default Vote;
+   

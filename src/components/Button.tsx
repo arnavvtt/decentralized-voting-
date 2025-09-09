@@ -1,19 +1,37 @@
-import React from "react";
+// src/components/Button.tsx - Overwrite
 
-interface ButtonProps {
-  children: React.ReactNode;
+import React from 'react';
+import type { ReactNode } from 'react';
+
+type Props = {
+  children: ReactNode;
+  className?: string;
   onClick?: () => void;
-}
+  type?: "button" | "submit";
+  disabled?: boolean;
+  style?: React.CSSProperties;
+};
 
-const Button: React.FC<ButtonProps> = ({ children, onClick }) => {
+export default function Button({
+  children,
+  className = '',
+  onClick,
+  type = 'button',
+  disabled,
+  style
+}: Props) {
   return (
     <button
+      className={`btn ${className}`}
       onClick={onClick}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 transition"
+      type={type}
+      disabled={disabled}
+      style={style}
     >
       {children}
     </button>
   );
-};
+}
 
-export default Button;
+
+

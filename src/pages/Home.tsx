@@ -1,26 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
+// src/pages/Home.tsx - Overwrite
 
-const Home: React.FC = () => {
+import React from 'react';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../contexts/AppContext';
+
+export default function Home() {
+  const navigate = useNavigate();
+  const { wallet } = useAppContext();
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-200 to-purple-200 p-6">
-      <h1 className="text-4xl font-bold mb-6 text-gray-800">Welcome to Voting DApp</h1>
-      <div className="flex flex-col md:flex-row gap-4">
-        <Link
-          to="/vote"
-          className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition"
-        >
-          Go to Vote
-        </Link>
-        <Link
-          to="/results"
-          className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition"
-        >
-          See Results
-        </Link>
-      </div>
-    </div>
+    <Card style={{ maxWidth: 470, margin: '4vw auto', textAlign: 'center' }}>
+      <h2>Welcome to Amrit Decentralized Voting</h2>
+      <p>
+        Vote securely via blockchain wallet.<br />Your choice counts for our community.<br /><br />
+        <b>Instructions:</b><br />
+        1. Connect your MetaMask wallet.<br />
+        2. Go to <b>Vote</b> to select your candidate.<br />
+        3. View live results anytime.<br />
+        4. (Admins) Manage candidates in Admin panel.
+      </p>
+      <Button onClick={() => navigate('/vote')} style={{ fontWeight: 500 }}>
+        Vote Now
+      </Button>
+      <Button onClick={() => navigate('/admin')} style={{ marginLeft: 16, background: '#644fff' }}>
+        Admin Login
+      </Button>
+    </Card>
   );
-};
+}
 
-export default Home;
